@@ -16,5 +16,5 @@ jobs:
       - run: pip install requests
       - run: pip install opencv-python
       - run: pip install selenium
-      - run: sudo python ../../../test.py
+      - run: sudo python ./test.py
       
