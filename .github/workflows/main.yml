@@ -1,0 +1,20 @@
+name: main
+on:
+  workflow_dispatch:
+  schedule:
+    # IMPORTANT: Set cron job in UTC timezone
+    - cron:  '* * * * *'
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.0'
+      - run: pip install requests
+      - run: pip install opencv-python
+      - run: pip install selenium
+      - run: python ./test.py
+      
