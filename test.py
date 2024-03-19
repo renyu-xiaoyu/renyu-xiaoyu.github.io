@@ -28,7 +28,7 @@ chrome_options.add_argument('--disable-gpu')
 driver = webdriver.Chrome(options=chrome_options)
 
 # 设置日志文件的路径
-log_dir = "/home/log"
+log_dir = "/log"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 # 配置日志
@@ -106,9 +106,9 @@ try:
     bigImageSrc = re.findall(p, s, re.S)[0]  # re.S表示点号匹配任意字符，包括换行符
     print("滑块验证图片下载路径:", bigImageSrc)
     # 下载图片至本地
-    urllib.request.urlretrieve(bigImageSrc, '/home/bigImage.png')
+    urllib.request.urlretrieve(bigImageSrc, '/bigImage.png')
     # 计算缺口图像的x轴位置
-    dis = get_pos('/home/bigImage.png')
+    dis = get_pos('/bigImage.png')
     # 获取小滑块元素，并移动它到上面的位置
     smallImage = driver.find_element(By.XPATH, '//*[@id="tcOperation"]/div[6]')
     # 小滑块到目标区域的移动距离（缺口坐标的水平位置距离小滑块的水平坐标相减的差）
