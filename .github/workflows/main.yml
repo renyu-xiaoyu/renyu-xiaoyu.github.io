@@ -13,8 +13,8 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.10'
-      - run: sudo pip install requests
-      - run: sudo pip install opencv-python
-      - run: sudo pip install selenium
-      - run: sudo python ./test.py
+      - run: pip install requests
+      - run: pip install opencv-python
+      - run: pip install selenium
+      - run: python ./test.py
       
