@@ -29,12 +29,12 @@ chrome_options.add_argument('--disable-gpu')
 driver = webdriver.Chrome(options=chrome_options)
 
 # 设置日志文件的路径
-log_dir = "log"
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
+# log_dir = "log"
+# if not os.path.exists(log_dir):
+#     os.makedirs(log_dir)
 # 配置日志
-logging.basicConfig(filename=log_dir + "/mylog.log", level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.basicConfig(filename=log_dir + "/mylog.log", level=logging.INFO,
+#                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 # 封装的计算图片距离的算法
@@ -166,4 +166,4 @@ response = requests.post(url, headers=headers)
 # 打印响应内容
 print(response.text)
 
-sys.exit(0)
+# sys.exit(0)
