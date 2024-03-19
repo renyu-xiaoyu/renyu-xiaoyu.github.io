@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import sys
 import time  # 事件库，用于硬性等待
 import urllib
 
@@ -73,97 +72,100 @@ def get_pos(imageSrc):
     return 0
 
 
-# 打开阿水 AI 登录页
-driver.get("https://ai.ashuiai.com/login")
-print(driver.title)  # 打印页面的标题
-# 等待 3 秒加载页面
-time.sleep(3)
-# 获取账号密码组件并赋值
-userInput = driver.find_element(By.XPATH,
-                                '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/div[1]/div[1]/div/div[1]/div/input')
-userInput.send_keys("shazishazi2022@163.com")
-passInput = driver.find_element(By.XPATH,
-                                '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/div[2]/div[1]/div/div[1]/div[1]/input')
-passInput.send_keys("abcd1234")
-# 输入账号密码后等待 1 秒后点击验证按钮
-time.sleep(1)
-# 使用浏览器的F12开发者工具，使用copy xpath获取该元素的XPATH路径。点击验证按钮
-passClick = driver.find_element(By.XPATH,
-                                '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/div[3]/div[1]/div/button/span[2]')
-passClick.click()
-# 等待 2 秒加载滑动验证码的图片
-time.sleep(2)
-# 此时需要切换到弹出的滑块区域，需要切换frame窗口
-driver.switch_to.frame("tcaptcha_iframe_dy")
-# 等待滑块验证图片加载后，再做后面的操作
-WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'slideBg')))
-# 获取滑块验证图片下载路径，并下载到本地
-bigImage = driver.find_element(By.ID, "slideBg")
-s = bigImage.get_attribute("style")  # 获取图片的style属性
-# 设置能匹配出图片路径的正则表达式
-p = 'background-image: url\(\"(.*?)\"\);'
-# 进行正则表达式匹配，找出匹配的字符串并截取出来
-bigImageSrc = re.findall(p, s, re.S)[0]  # re.S表示点号匹配任意字符，包括换行符
-print("滑块验证图片下载路径:", bigImageSrc)
-# 下载图片至本地
-urllib.request.urlretrieve(bigImageSrc, 'bigImage.png')
-# 计算缺口图像的x轴位置
-dis = get_pos('bigImage.png')
-# 获取小滑块元素，并移动它到上面的位置
-smallImage = driver.find_element(By.XPATH, '//*[@id="tcOperation"]/div[6]')
-# 小滑块到目标区域的移动距离（缺口坐标的水平位置距离小滑块的水平坐标相减的差）
-# 新缺口坐标=原缺口坐标*新画布宽度/原画布宽度
-newDis = int(dis * 340 / 672 - smallImage.location['x'])
-driver.implicitly_wait(5)  # 使用浏览器隐式等待5秒
-# 按下小滑块按钮不动
-ActionChains(driver).click_and_hold(smallImage).perform()
-# 移动小滑块，模拟人的操作，一次次移动一点点
-i = 0
-moved = 0
-while moved < newDis:
-    x = random.randint(3, 10)  # 每次移动3到10像素
-    moved += x
-    ActionChains(driver).move_by_offset(xoffset=x, yoffset=0).perform()
-    # print("第{}次移动后，位置为{}".format(i, smallImage.location['x']))
-    i += 1
-# 移动完之后，松开鼠标
-ActionChains(driver).release().perform()
-logging.info("滑动成功")
-# 验证完后等待两秒后再点击登录按钮
-time.sleep(3)
-print("点击之前")
+try:
+    # 打开阿水 AI 登录页
+    driver.get("https://ai.ashuiai.com/login")
+    print(driver.title)  # 打印页面的标题
+    # 等待 3 秒加载页面
+    time.sleep(3)
+    # 获取账号密码组件并赋值
+    userInput = driver.find_element(By.XPATH,
+                                    '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/div[1]/div[1]/div/div[1]/div/input')
+    userInput.send_keys("shazishazi2022@163.com")
+    passInput = driver.find_element(By.XPATH,
+                                    '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/div[2]/div[1]/div/div[1]/div[1]/input')
+    passInput.send_keys("abcd1234")
+    # 输入账号密码后等待 1 秒后点击验证按钮
+    time.sleep(1)
+    # 使用浏览器的F12开发者工具，使用copy xpath获取该元素的XPATH路径。点击验证按钮
+    passClick = driver.find_element(By.XPATH,
+                                    '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/div[3]/div[1]/div/button/span[2]')
+    passClick.click()
+    # 等待 2 秒加载滑动验证码的图片
+    time.sleep(2)
+    # 此时需要切换到弹出的滑块区域，需要切换frame窗口
+    driver.switch_to.frame("tcaptcha_iframe_dy")
+    # 等待滑块验证图片加载后，再做后面的操作
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'slideBg')))
+    # 获取滑块验证图片下载路径，并下载到本地
+    bigImage = driver.find_element(By.ID, "slideBg")
+    s = bigImage.get_attribute("style")  # 获取图片的style属性
+    # 设置能匹配出图片路径的正则表达式
+    p = 'background-image: url\(\"(.*?)\"\);'
+    # 进行正则表达式匹配，找出匹配的字符串并截取出来
+    bigImageSrc = re.findall(p, s, re.S)[0]  # re.S表示点号匹配任意字符，包括换行符
+    print("滑块验证图片下载路径:", bigImageSrc)
+    # 下载图片至本地
+    urllib.request.urlretrieve(bigImageSrc, 'bigImage.png')
+    # 计算缺口图像的x轴位置
+    dis = get_pos('bigImage.png')
+    # 获取小滑块元素，并移动它到上面的位置
+    smallImage = driver.find_element(By.XPATH, '//*[@id="tcOperation"]/div[6]')
+    # 小滑块到目标区域的移动距离（缺口坐标的水平位置距离小滑块的水平坐标相减的差）
+    # 新缺口坐标=原缺口坐标*新画布宽度/原画布宽度
+    newDis = int(dis * 340 / 672 - smallImage.location['x'])
+    driver.implicitly_wait(5)  # 使用浏览器隐式等待5秒
+    # 按下小滑块按钮不动
+    ActionChains(driver).click_and_hold(smallImage).perform()
+    # 移动小滑块，模拟人的操作，一次次移动一点点
+    i = 0
+    moved = 0
+    while moved < newDis:
+        x = random.randint(3, 10)  # 每次移动3到10像素
+        moved += x
+        ActionChains(driver).move_by_offset(xoffset=x, yoffset=0).perform()
+        # print("第{}次移动后，位置为{}".format(i, smallImage.location['x']))
+        i += 1
+    # 移动完之后，松开鼠标
+    ActionChains(driver).release().perform()
+    logging.info("滑动成功")
+    # 验证完后等待两秒后再点击登录按钮
+    time.sleep(3)
+    print("点击之前")
 
-# 切回主元素
-driver.switch_to.default_content()
-print("切回主元素")
+    # 切回主元素
+    driver.switch_to.default_content()
+    print("切回主元素")
 
-# 获取登录按钮并点击登录
-loginButton = driver.find_element(By.XPATH,
-                                  '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/button/span')
-loginButton.click()
-print("点击登录了")
+    # 获取登录按钮并点击登录
+    loginButton = driver.find_element(By.XPATH,
+                                      '//*[@id="app"]/div/div[1]/div/div[1]/div/div[2]/div/main/form/button/span')
+    loginButton.click()
+    print("点击登录了")
 
-# 登录成功加载页面
-time.sleep(5)
-print("登录成功了")
+    # 登录成功加载页面
+    time.sleep(5)
+    print("登录成功了")
 
-# 获取响应头中的 token
-localStorage = driver.execute_script('return localStorage.getItem("_token_");')
-loads = json.loads(localStorage)
-print("localStorage：", loads["data"])
+    # 获取响应头中的 token
+    localStorage = driver.execute_script('return localStorage.getItem("_token_");')
+    loads = json.loads(localStorage)
+    print("localStorage：", loads["data"])
 
-# 定义请求头，替换 YOUR_TOKEN_HERE 为实际的 token 值
-headers = {
-    'Authorization': 'Bearer ' + loads["data"],
-}
+    # 定义请求头，替换 YOUR_TOKEN_HERE 为实际的 token 值
+    headers = {
+        'Authorization': 'Bearer ' + loads["data"],
+    }
 
-# 定义请求的 URL 和要发送的数据
-url = 'https://api.xiabb.chat/chatapi/marketing/signin'  # 替换为实际的 API 接口 URL
+    # 定义请求的 URL 和要发送的数据
+    url = 'https://api.xiabb.chat/chatapi/marketing/signin'  # 替换为实际的 API 接口 URL
 
-# 发送 POST 请求
-response = requests.post(url, headers=headers)
+    # 发送 POST 请求
+    response = requests.post(url, headers=headers)
 
-# 打印响应内容
-print(response.text)
+    # 打印响应内容
+    print(response.text)
 
-# sys.exit(0)
+finally:
+    # 关闭浏览器
+    driver.quit()
